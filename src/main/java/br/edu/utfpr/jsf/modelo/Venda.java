@@ -28,8 +28,8 @@ public class Venda implements Serializable {
 	@GeneratedValue // define a propriedade id como auto incremento
 	@Column(name="id") // define detalhes da propriedade 
 	private Long id;
-	@Column(name="numero",nullable=false,length=10) // define detalhes da propriedade
-	private String numero;
+	@Column(name="numero",nullable=false) // define detalhes da propriedade
+	private Integer numero;
 	@Temporal(TemporalType.DATE) // define que sera gravada apenas a data sem o horario
 	@Column(name="data",nullable=false) // define detalhes da propriedade
 	private Calendar data;
@@ -37,7 +37,7 @@ public class Venda implements Serializable {
 	@JoinColumn(name="cliente_id") // define detalhes da propriedade
 	private Cliente cliente;
 	// define relacionamento inverso um para muitos, esse campo nao sera criado no banco de dados
-	@OneToMany(mappedBy="venda",fetch=FetchType.LAZY,cascade=CascadeType.ALL,orphanRemoval=true)
+	@OneToMany(mappedBy="venda",fetch=FetchType.EAGER,cascade=CascadeType.ALL,orphanRemoval=true)
 	private List<VendaProduto> produtos = new ArrayList<>();
 	
 	public Venda() {}
@@ -50,11 +50,11 @@ public class Venda implements Serializable {
 		this.id = id;
 	}
 
-	public String getNumero() {
+	public Integer getNumero() {
 		return numero;
 	}
 
-	public void setNumero(String numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 

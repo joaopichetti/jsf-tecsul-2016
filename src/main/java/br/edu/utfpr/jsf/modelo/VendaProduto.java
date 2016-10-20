@@ -26,8 +26,8 @@ public class VendaProduto implements Serializable {
 	@Column(name="quantidade",nullable=false) // define detalhes da propriedade 
 	private Integer quantidade;
 	@ManyToOne(optional=false) // define relacionamento muitos para um
-	@JoinColumn(name="item_id") // define detalhes da propriedade
-	private Produto item;
+	@JoinColumn(name="produto_id") // define detalhes da propriedade
+	private Produto produto;
 	@ManyToOne(optional=false) // define relacionamento muitos para um
 	@JoinColumn(name="venda_id") // define detalhes da propriedade
 	private Venda venda;
@@ -58,12 +58,12 @@ public class VendaProduto implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	public Produto getItem() {
-		return item;
+	public Produto getProduto() {
+		return produto;
 	}
 
-	public void setItem(Produto item) {
-		this.item = item;
+	public void setProduto(Produto produto) {
+		this.produto = produto;
 	}
 
 	public Venda getVenda() {
