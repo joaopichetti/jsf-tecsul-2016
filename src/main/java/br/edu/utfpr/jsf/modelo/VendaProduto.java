@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity // define a classe como sendo uma tabela do banco de dados
-@Table(name="venda_item") // define detalhes da tabela
+@Table(name="venda_produto") // define detalhes da tabela
 public class VendaProduto implements Serializable {
 	
 	private static final long serialVersionUID = -1999102608573115262L;
