@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:composition template="template.xhtml">
+	
+		<ui:define name="conteudo">
+		
+			<fieldset>
+				<legend>Novo Produto</legend>
+				<h:form>
+					<h:messages id="mensagens" />
+					<h:inputHidden id="id" value="#{produtoBean.produto.id}" />
+					<h:panelGrid columns="2">					
+						<h:outputLabel value="Nome" for="nome" />
+						<h:inputText id="nome" value="#{produtoBean.produto.nome}"
+							required="true" requiredMessage="O nome é obrigatório"
+							validatorMessage="Nome possui um valor inválido"
+							maxlength="60">
+							<f:validateLength maximum="60" />
+							<f:ajax event="blur" render="mensagens" />
+						</h:inputText>
+						<h:outputLabel value="Descrição" for="descricao" />
+						<h:inputText id="descricao" value="#{produtoBean.produto.descricao}" />
+						<h:outputLabel value="Saldo" for="saldo" />
+						<h:inputText id="saldo" value="#{produtoBean.produto.saldo}"
+							required="true" requiredMessage="O saldo é obrigatório"
+							validatorMessage="Saldo deve estar entre 0 e 999"
+							converterMessage="Saldo deve ser um valor numérico">
+							<f:validateLongRange minimum="0" maximum="999" />
+							<f:convertNumber integerOnly="true" />
+						</h:inputText>
+						<h:outputLabel value="Preço" for="preco" />
+						<h:inputText id="preco" value="#{produtoBean.produto.preco}"
+							required="true" requiredMessage="O preço é obrigatório"
+							validatorMessage="Preço deve estar entre 0.01 e 999999.99"
+							converterMessage="Preço deve ser um valor numérico">
+							<f:validateDoubleRange minimum="0.01" maximum="999999.99" />
+							<f:convertNumber />						
+						</h:inputText>
+						<h:commandButton value="Gravar" action="#{produtoBean.gravar()}" />
+					</h:panelGrid>
+				</h:form>
+			</fieldset>
+			<fieldset>
+				<legend>Produtos</legend>
+				<h:form>
+					<h:commandLink value="Novo Produto" action="#{produtoBean.novo()}" />
+					<h:dataTable value="#{produtoBean.produtos}" var="produto">
+						<h:column>
+							<f:facet name="header">Nome</f:facet>
+							<h:outputText value="#{produto.nome}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Descrição</f:facet>
+							<h:outputText value="#{produto.descricao}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Saldo</f:facet>
+							<h:outputText value="#{produto.saldo}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Preço</f:facet>
+							<h:outputText value="#{produto.preco}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Alterar</f:facet>
+							<h:commandLink value="Alterar" action="#{produtoBean.carregar(produto.id)}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">Remover</f:facet>
+							<h:commandLink value="Remover" action="#{produtoBean.remover(produto.id)}" />
+						</h:column>
+					</h:dataTable>
+				</h:form>
+			</fieldset>
+		</ui:define>		
+	</ui:composition>
+</html>

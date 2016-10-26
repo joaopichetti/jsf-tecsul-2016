@@ -64,23 +64,11 @@ public class DAO<T> {
 		return lista;
 	}
 
-	public T buscaPorId(Integer id) {
+	public T buscaPorId(Long id) {
 		EntityManager em = new JPAUtil().getEntityManager();
 		T instancia = em.find(classe, id);
 		em.close();
 		return instancia;
-	}
-
-	public List<T> listaTodosPaginada(int firstResult, int maxResults) {
-		EntityManager em = new JPAUtil().getEntityManager();
-		CriteriaQuery<T> query = em.getCriteriaBuilder().createQuery(classe);
-		query.select(query.from(classe));
-
-		List<T> lista = em.createQuery(query).setFirstResult(firstResult)
-				.setMaxResults(maxResults).getResultList();
-
-		em.close();
-		return lista;
 	}
 
 }

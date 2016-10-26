@@ -8,7 +8,6 @@
 		
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>br.edu.utfpr.jsf.modelo.Produto</class>
-		<class>br.edu.utfpr.jsf.modelo.Cliente</class>
 		<class>br.edu.utfpr.jsf.modelo.Venda</class>
 		<class>br.edu.utfpr.jsf.modelo.VendaProduto</class>
 

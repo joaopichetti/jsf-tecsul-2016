@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ui:composition template="template.xhtml">
+		
+		<ui:define name="conteudo">
+			
+			<p:panel id="panelForm" header="#{vendaBean.tituloFormulario}" 
+				visible="#{!(vendaBean.estaListando())}">
+				<br />
+				<h:form id="form">
+					<h:inputHidden id="id" value="#{vendaBean.venda.id}" />
+					
+					<p:panelGrid columns="2">
+						<p:outputLabel value="Número" for="numero" />
+						<p:inputNumber id="numero" value="#{vendaBean.venda.numero}"
+							required="true" requiredMessage="Informe o número" 
+							thousandSeparator="." decimalSeparator="," decimalPlaces="0"
+							minValue="1" />
+						
+						<p:outputLabel value="Data" for="data" />
+						<p:calendar id="data" value="#{vendaBean.venda.data.time}"
+							required="true" requiredMessage="Informe a data"
+							pattern="dd/MM/yyyy" mask="true" />
+						
+						<h:outputText value="Total" />
+						<h:outputText id="total" value="#{vendaBean.venda.total}">
+							<f:convertNumber pattern="R$ #,##0.00" />
+						</h:outputText>
+					</p:panelGrid>
+					
+					<br />				
+					<p:dataTable id="tabelaProdutos" value="#{vendaBean.venda.produtos}" var="vendaProduto"
+						emptyMessage="Nenhum produto gravado" rowIndexVar="index">
+						<f:facet name="header">
+							<h:outputText value="Produtos" />
+						</f:facet>
+						<h:inputHidden value="#{vendaProduto.id}" />
+						<p:column headerText="Produto">
+							<p:selectOneMenu value="#{vendaProduto.produto.id}"
+								required="true" requiredMessage="Informe o produto">
+								<f:selectItem itemLabel="Selecione" />
+								<f:selectItems value="#{vendaBean.produtos}" var="produto"
+									 itemValue="#{produto.id}" itemLabel="#{produto.nome}" />							
+							</p:selectOneMenu>
+						</p:column>
+						<p:column headerText="Quantidade">
+							<p:inputNumber value="#{vendaProduto.quantidade}"
+								required="true" requiredMessage="Informe a quantidade">
+								<p:ajax event="blur" process="@this"
+									update=":form:total :form:tabelaProdutos:#{index}:subtotal" 
+									immediate="true" />
+							</p:inputNumber>
+						</p:column>
+						<p:column headerText="Valor">
+							<p:inputNumber value="#{vendaProduto.valor}"
+								required="true" requiredMessage="Informe o valor">
+								<p:ajax event="blur" process="@this"
+									update=":form:total :form:tabelaProdutos:#{index}:subtotal" 
+									immediate="true" />
+							</p:inputNumber>
+						</p:column>
+						<p:column headerText="Subtotal">
+							<h:outputText id="subtotal" value="#{vendaProduto.total}">
+								<f:convertNumber pattern="R$ #,##0.00" />
+							</h:outputText>
+						</p:column>
+						<p:column>
+							<p:commandButton value="Excluir" icon="ui-icon-trash"
+								action="#{vendaBean.excluirProduto(index)}"
+								process="@this" update="tabelaProdutos :form:total" />
+						</p:column>
+						<f:facet name="footer">
+							<p:commandButton value="Adicionar" icon="ui-icon-plus"
+								action="#{vendaBean.adicionarProduto()}"
+								process="@parent" update="@parent" />						
+						</f:facet>
+					</p:dataTable>
+					
+					<br />
+					
+					<p:commandButton value="Gravar Venda" action="#{vendaBean.gravar()}"
+						process="@form" update="panelForm panelLista" />				
+					<p:commandButton value="Cancelar" action="#{vendaBean.fecharFormulario()}"
+						process="@this" update="panelForm panelLista" />
+				</h:form>
+			</p:panel>
+			
+			<p:panel id="panelLista" header="Vendas" visible="#{vendaBean.estaListando()}">
+				<p:commandButton value="Inserir" action="#{vendaBean.inserir()}"
+					process="@this" update="panelForm panelLista" />
+				<br />
+				<p:dataTable value="#{vendaBean.vendas}" var="venda"
+					emptyMessage="Nenhuma venda cadastrada">
+					<p:column headerText="Número">
+						<h:outputText value="#{venda.numero}" />
+					</p:column>
+					<p:column headerText="Data">
+						<h:outputText value="#{venda.data.time}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Total">
+						<h:outputText value="#{venda.total}">
+							<f:convertNumber pattern="R$ #,##0.00" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Editar">
+						<p:commandButton value="Editar" icon="ui-icon-pencil" 
+							action="#{vendaBean.editar(venda.id)}"
+							process="@this" update="panelForm panelLista" />
+					</p:column>
+					<p:column headerText="Excluir">
+						<p:commandButton value="Excluir" icon="ui-icon-trash" 
+							action="#{vendaBean.excluir(venda.id)}"
+							process="@this" update="panelLista">
+							<p:confirm header="Atenção" icon="ui-icon-alert"
+								message="Essa operaçao não poderá ser desfeita. Deseja continuar?" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			
+			<p:confirmDialog global="true">
+		        <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" 
+		        	icon="ui-icon-check" />
+		        <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" 
+		        	icon="ui-icon-close" />
+		    </p:confirmDialog>
+		</ui:define>
+	</ui:composition>
+</html>
